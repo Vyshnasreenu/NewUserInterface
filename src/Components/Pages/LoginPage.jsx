@@ -17,19 +17,11 @@ const LoginPage = () => {
         password: "",
     })
 
-
     const [errorState, setErrorState] = useState({
         email: false,
         password: false,
     })
 
-    useEffect(() => {
-        const user = auth.currentUser
-        if (user) {
-            const email = user.email;
-            setUserEmail(email);
-        }
-    }, [])
 
     const changeHandler = (event, name) => {
         const { value } = event.target
