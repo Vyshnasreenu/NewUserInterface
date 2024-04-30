@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const HomePage = () => {
     return (
-        <div>HomePage</div>
+        <div>Welcome Sreenu!!!
+        </div>
     )
 }
 
