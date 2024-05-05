@@ -4,12 +4,12 @@ import { Box, Button, Tab, Tabs, TextField } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import SignUpPage from './SignUpPage'
 import LoginPage from './LoginPage'
+import NoticePage from './NoticePage'
 const LandingPage = () => {
 
     const [changeTab, setChangeTab] = useState("1")
 
     const tabChanger = (value, newValue) => {
-        console.log("first")
         setChangeTab(newValue)
     }
 
@@ -22,8 +22,9 @@ const LandingPage = () => {
         <div>
             <div className='row'>
                 <div className='col'>
-                    <div className='row' style={{ height: "99vh", background: "orange", position: "fixed", width: "100%" }}>
+                    <div className='row' style={{ height: "99vh", background: "orange", position: "", width: "100%" }}>
                         <div className='col-md-7'>
+                            <NoticePage />
                         </div>
                         <div className='col-md-4 m-auto bg-white' style={{ borderRadius: "10px" }}>
                             <div className='p-3'>
@@ -38,7 +39,7 @@ const LandingPage = () => {
                                         <TabPanel value="1">
                                             <SignUpPage tabChanger={loginAccountHandler} />
                                             <div className='row p-2'>
-                                                <a href='#' role='button' style={{ color: "purple" }} tabIndex={0} onClick={() => loginAccountHandler()}>Already have an account? Login</a>
+                                                <span className='text-primary' role='button'  tabIndex={0} onClick={() => loginAccountHandler()}>Already have an account? Login</span>
                                             </div>
                                         </TabPanel>
                                         <TabPanel value="2">
@@ -46,7 +47,7 @@ const LandingPage = () => {
                                         </TabPanel>
                                     </TabContext>
                                 </div>
-                                <div className='row p-2 m-auto'>
+                                {/* <div className='row p-2 m-auto'>
                                     <div className='col-md-4'>
                                         <Button variant='text' color='info'>Facebook</Button>
                                     </div>
@@ -56,7 +57,7 @@ const LandingPage = () => {
                                     <div className='col-md-4'>
                                         <Button variant='text' color='info'>Twitter</Button>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

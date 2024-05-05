@@ -68,7 +68,6 @@ const LoginPage = () => {
         }
         if (flag) {
             try {
-                console.log(state.email, state.password)
                 signInWithEmailAndPassword(auth, state.email, state.password)
                     .then((userCredential) => {
                         // Signed in 
@@ -146,10 +145,10 @@ const LoginPage = () => {
                                 onChange={(event) => changeHandler(event, "password")}
                             />
                         </FormControl>
-                        <span role='button' tabIndex={0} className='btn btn-link' onClick={resetPassword}>Forgot password</span>
+                        <span role='button' tabIndex={0} className='btn text-primary' onClick={resetPassword}>Forgot password</span>
                     </div>
                 </div>
-                <div className='row p-2 mt-5'>
+                <div className='row p-2'>
                     <div className='m-auto'>
                         <Button variant='contained' color='primary' onClick={loginHandler}>Login</Button>
                     </div>

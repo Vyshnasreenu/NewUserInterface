@@ -10,12 +10,8 @@ import { RecaptchaVerifier, createUserWithEmailAndPassword, signInWithPhoneNumbe
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { useStopwatch, useTimer } from 'react-timer-hook'
+import { useTimer } from 'react-timer-hook'
 const SignUpPage = ({ tabChanger }) => {
-
-    useEffect(() => {
-
-    }, [])
 
     let nav = useNavigate()
     const [state, setState] = useState({
@@ -87,7 +83,6 @@ const SignUpPage = ({ tabChanger }) => {
     }
 
     const invisibleReCaptcha = (number) => {
-        console.log(number)
         const captcha = new RecaptchaVerifier(auth, 'recaptcha-container', {
             "size": "invisible",
             "callback": (response) => {
@@ -159,55 +154,64 @@ const SignUpPage = ({ tabChanger }) => {
         const newData = { ...data }
         if (flag) {
             if (!CMS.isNullOrEmpty(state.phoneNumber)) {
-                console.log("second")
                 try {
                     const response = await invisibleReCaptcha(state.phoneNumber)
                     setConfirmObj(response)
                     newData.otpFlag = true;
                 } catch (error) {
-                    toast.error("To-many-requests")
+                    toast.error("To-many-requests.Please try again later")
                     return
                 }
             }
-            createUserWithEmailAndPassword(auth, state.email, state.password)
-                .then((userCredential) => {
-                    console.log(userCredential)
-                })
-                .catch((error) => {
-                    console.log(error)
-                    toast.error("Email-already-in-use")
-
-                })
         }
+
+        newData.backToSign = false;
         setData(newData)
         setErrorState(newErrorState)
     }
     const otpVerifierhandler = () => {
         const newData = { ...data }
-        console.log(newData, "newData")
         if (CMS.isNullOrEmpty(data.otp)) {
             toast.warning("Please Enter OTP.");
             return
         }
-        confirmObj.confirm(data.otp).then((result) => {
-            console.log(result._tokenResponse?.isNewUser)
-            if (result._tokenResponse?.isNewUser) {
-                // New user, proceed with account creation or further registration steps
-                setTimeout(() => {
-                    nav("./home")
-                }, 1000)
-                toast.success("Submited Successfully!");
-            }
-            else {
-                toast.error("Already user is logged")
-            }
-        })
-            .catch(function (error) {
-                // Handle authentication errors
-                toast.warning("Invalid OTP");
-                newData.backToSign = true;
-            });
+        try {
+            confirmObj.confirm(data.otp).then((result) => {
+                if (result._tokenResponse?.isNewUser) {
+                    // New user, proceed with account creation or further registration steps
+                    if (!newData.backToSign) {
+                        console.log("first")
+                        createUserWithEmailAndPassword(auth, state.email, state.password)
+                            .then((userCredential) => {
+                                console.log(userCredential)
+                            })
+                            .catch((error) => {
+                                toast.error("Email-already-in-use")
+
+                            })
+                        // }
+                        setTimeout(() => {
+                            nav("./home")
+                        }, 1000)
+                        toast.success("Submited Successfully!");
+                    }
+                }
+                else {
+                    toast.error("Already user is logged")
+                }
+            })
+                .catch((error) => {
+                    // Handle authentication errors
+                    // reject(error)
+                    toast.warning("Invalid OTP");
+                    newData.backToSign = true;
+                });
+
+        } catch (error) {
+            console.log(error)
+        }
         setData(newData)
+
     }
 
     const onPhoneInputHandler = (value, county) => {
@@ -230,7 +234,6 @@ const SignUpPage = ({ tabChanger }) => {
     // React.useEffect(() => {
     //     if (seconds === 1) {
     //         pause();
-    //         console.log('Timer stopped at 0');
     //     }
     //     // timer = null;
     // }, [seconds, pause]);
@@ -359,7 +362,7 @@ const SignUpPage = ({ tabChanger }) => {
                     </div>
                     <div className='row p-2'>
                         <div className='m-auto'>
-                            <Button onClick={submitHandler}>submit</Button>
+                            <Button onClick={submitHandler} variant='contained' className='btn bg-success'>submit</Button>
                         </div>
                     </div>
                 </>
@@ -372,7 +375,6 @@ const SignUpPage = ({ tabChanger }) => {
                         <div className='m-auto d-flex justify-content-between'>
                             {data.backToSign && <Button className='btn btn-link' onClick={goToSignUp}>Back to SignUp</Button>}
                             <Button variant='contained' onClick={otpVerifierhandler}>Verify Otp</Button>
-                            {/* {seconds === 1 ? null : timer} */}
                         </div>
 
                     </div>
